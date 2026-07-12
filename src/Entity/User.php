@@ -2,19 +2,19 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\SoftDeletableTrait;
+use App\Enum\CascadeEnum;
+use App\Enum\UserRoleEnum;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Enum\UserRoleEnum;
-use Symfony\Component\Clock\DatePoint;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'user')]
-class User
+class User extends AbstractEntity
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    use SoftDeletableTrait;
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
@@ -31,18 +31,19 @@ class User
     #[ORM\Column(enumType: UserRoleEnum::class)]
     private UserRoleEnum $role;
 
-    #[ORM\Column(type: 'date_point')]
-    private ?DatePoint $createdAt = null;
+    #[ORM\OneToOne(
+        mappedBy: 'user',
+        targetEntity: LoyaltyAccount::class,
+        cascade: [CascadeEnum::PERSIST->value, CascadeEnum::REMOVE->value]
+    )]
+    private ?LoyaltyAccount $loyaltyAccount = null;
 
-    #[ORM\Column(type: 'date_point')]
-    private ?DatePoint $updatedAt = null;
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'user')]
+    private Collection $orders;
 
-    #[ORM\Column(type: 'date_point', nullable: true)]
-    private ?DatePoint $deletedAt = null;
-
-    public function getId(): ?int
+    public function __construct()
     {
-        return $this->id;
+        $this->orders = new ArrayCollection();
     }
 
     public function getEmail(): ?string
@@ -105,39 +106,27 @@ class User
         return $this;
     }
 
-    public function getCreatedAt(): ?DatePoint
+    public function getLoyaltyAccount(): ?LoyaltyAccount
     {
-        return $this->createdAt;
+        return $this->loyaltyAccount;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setLoyaltyAccount(?LoyaltyAccount $loyaltyAccount): static
     {
-        $this->createdAt = DatePoint::createFromInterface($createdAt);
+        if ($loyaltyAccount !== null && $loyaltyAccount->getUser() !== $this) {
+            $loyaltyAccount->setUser($this);
+        }
+
+        $this->loyaltyAccount = $loyaltyAccount;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?DatePoint
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
     {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
-    {
-        $this->updatedAt = DatePoint::createFromInterface($updatedAt);
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?DatePoint
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeInterface $deletedAt): static
-    {
-        $this->deletedAt = $deletedAt ? DatePoint::createFromInterface($deletedAt) : null;
-
-        return $this;
+        return $this->orders;
     }
 }
