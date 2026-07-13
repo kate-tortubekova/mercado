@@ -37,4 +37,19 @@ trait TimestampableTrait
 
         return $this;
     }
+
+    #[ORM\PrePersist]
+    public function updateTimestampsBeforePersist(): void
+    {
+        $now = new DatePoint(); 
+        
+        $this->createdAt = $now;
+        $this->updatedAt = $now;
+    }
+
+    #[ORM\PreUpdate]
+    public function updateTimestampsBeforeUpdate(): void
+    {
+        $this->updatedAt = new DatePoint();
+    }
 }

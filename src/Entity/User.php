@@ -9,10 +9,11 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: 'user')]
-class User extends AbstractEntity
+#[ORM\Table(name: '`user`')]
+class User extends AbstractEntity implements PasswordAuthenticatedUserInterface
 {
     use SoftDeletableTrait;
 

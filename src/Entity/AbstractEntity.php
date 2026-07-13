@@ -6,6 +6,7 @@ use App\Entity\Trait\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass] 
+#[ORM\HasLifecycleCallbacks]
 abstract class AbstractEntity
 {
     use TimestampableTrait;
