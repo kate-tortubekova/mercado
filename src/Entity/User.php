@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Trait\SoftDeletableTrait;
 use App\Enum\CascadeEnum;
 use App\Enum\UserRoleEnum;
+use App\Listener\UserListener;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,6 +14,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[ORM\EntityListeners([UserListener::class])]
 class User extends AbstractEntity implements PasswordAuthenticatedUserInterface
 {
     use SoftDeletableTrait;
