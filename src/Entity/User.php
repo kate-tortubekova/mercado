@@ -11,11 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\EntityListeners([UserListener::class])]
-class User extends AbstractEntity implements PasswordAuthenticatedUserInterface
+class User extends AbstractEntity implements PasswordAuthenticatedUserInterface, UserInterface
 {
     use SoftDeletableTrait;
 
@@ -131,5 +132,20 @@ class User extends AbstractEntity implements PasswordAuthenticatedUserInterface
     public function getOrders(): Collection
     {
         return $this->orders;
+    }
+
+    public function getRoles(): array
+    {
+        return [$this->getRole()->value];
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
     }
 }
