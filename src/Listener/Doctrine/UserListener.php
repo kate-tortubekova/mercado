@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listener;
+namespace App\Listener\Doctrine;
 
 use App\Entity\LoyaltyAccount;
 use App\Entity\User;

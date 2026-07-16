@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Entity\Trait\SoftDeletableTrait;
 use App\Enum\CascadeEnum;
 use App\Enum\UserRoleEnum;
-use App\Listener\UserListener;
+use App\Listener\Doctrine\UserListener;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;

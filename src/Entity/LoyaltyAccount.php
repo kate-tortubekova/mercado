@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Enum\CascadeEnum;
-use App\Listener\LoyaltyAccountListener;
+use App\Listener\Doctrine\LoyaltyAccountListener;
 use App\Repository\LoyaltyAccountRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
