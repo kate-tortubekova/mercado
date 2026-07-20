@@ -37,10 +37,10 @@ class RegisterDTO
         #[Assert\NotBlank(message: 'Password confirmation is required.')]
         public readonly string $password_confirmation,
 
-        #[Assert\Length(max: 255, maxMessage: 'First name must not exceed 255 characters.')]
+        #[Assert\Length(min: 2, max: 255, maxMessage: 'First name must not exceed 255 characters.')]
         public readonly ?string $first_name,
 
-        #[Assert\Length(max: 255, maxMessage: 'Last name must not exceed 255 characters.')]
+        #[Assert\Length(min: 2, max: 255, maxMessage: 'Last name must not exceed 255 characters.')]
         public readonly ?string $last_name,
     ) {}
 }

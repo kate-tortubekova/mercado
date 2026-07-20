@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Attribute\ApiResponse;
 use App\DTO\Request\Auth\RegisterDTO;
+use App\DTO\Request\Auth\UpdateProfileDTO;
 use App\DTO\Response\UserResponseDTO;
 use App\Entity\User;
 use App\Service\Auth\RegisterService;
+use App\Service\Auth\UpdateProfileService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,5 +32,15 @@ final class AuthController extends AbstractController
     public function profile(#[CurrentUser()] ?User $user): UserResponseDTO
     {
         return UserResponseDTO::fromEntity($user);
+    }
+
+    #[Route('/api/users/me', name: 'update-profile', methods: ['PATCH'])]
+    #[ApiResponse(status: Response::HTTP_OK)]
+    public function updateProfile(
+        #[MapRequestPayload] UpdateProfileDTO $dto,
+        #[CurrentUser] ?User $user,
+        UpdateProfileService $service
+    ): UserResponseDTO {
+        return UserResponseDTO::fromEntity($service->run($user, $dto));
     }
 }
